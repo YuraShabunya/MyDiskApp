@@ -1,0 +1,62 @@
+﻿@model MyDiskApp.ViewModels.RegisterModel
+
+<h2>Регистрация</h2>
+
+<form asp-action="Register" asp-controller="Account" asp-anti-forgery="true">
+    <div class="validation" asp-validation-summary="All"></div>
+    <table>
+        <tr>
+            <td>
+                <div>
+                    <div>
+                        <label asp-for="FirstName">Введите имя</label><br />
+                        <input type="text" asp-for="FirstName" />
+                        <span asp-validation-for="FirstName" />
+                    </div>
+                    <div>
+                        <label asp-for="LastName">Введите фамилию</label><br />
+                        <input type="text" asp-for="LastName" />
+                        <span asp-validation-for="LastName" />
+                    </div>
+                    <div>
+                        <label asp-for="Birthday">Введите дату рождения</label><br />
+                        <input type="date" asp-for="Birthday" />
+                        <span asp-validation-for="Birthday" />
+                    </div>
+                    <div>
+                        <label asp-for="Email">Введите Email</label><br />
+                        <input type="email" asp-for="Email" />
+                        <span asp-validation-for="Email" />
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div>
+                    <div>
+                        <label asp-for="Login">Введите Login</label><br />
+                        <input type="text" asp-for="Login" />
+                        <span asp-validation-for="Login" />
+                    </div>
+                    <div>
+                        <label asp-for="Password">Введите пароль</label><br />
+                        <input asp-for="Password" />
+                        <span asp-validation-for="Password" />
+                    </div>
+                    <div>
+                        <label asp-for="ConfirmPassword">Повторите пароль</label><br />
+                        <input asp-for="ConfirmPassword" />
+                        <span asp-validation-for="ConfirmPassword" />
+                    </div>
+                    <div>
+                        <label asp-for="SecretWord">Секретное слово</label><br />
+                        <input type="text" asp-for="SecretWord" />
+                        <span asp-validation-for="SecretWord" />
+                    </div>
+                    <div>
+                        <input type="submit" value="Регистрация" />
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>

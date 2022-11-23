@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+</head>
+<header>
+    <ul>
+        @if(User.Identity.IsAuthenticated)
+        {
+            <li><a href="/Home/Index">Home</a></li>
+            <li><a href="/Account/Logout">Logout</a></li>
+            <li><a href="/RunAccount/FullInformation">Accout</a></li>
+        }
+        else
+        {
+            <li><a href="/Home/Index">Home</a></li>
+            <li><a href="/Account/Login">Login</a></li>
+            <li><a href="/Account/Register">Register</a></li>
+        }
+    </ul>
+</header>
+<body>
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>
