@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyDiskApp.Services.Interface;
 using MyDiskApp.ViewModels;
+using MyDiskEF.Models;
 
 namespace MyDiskApp.Controllers 
 {
@@ -12,15 +13,18 @@ namespace MyDiskApp.Controllers
         private readonly IGetUser _getUser;
         private readonly IDeleteFile _deleteFile;
         private readonly ILoggy _loggy;
+        private readonly ISaveFile _saveFile;
 
-        public HomeController(IGetAllFiles getAllFiles, IGetUser getUser, IAddFile addFileAsync, IDeleteFile deleteFileAsync, ILoggy loggy)
+        public HomeController(IGetAllFiles getAllFiles, IGetUser getUser, IAddFile addFileAsync, IDeleteFile deleteFileAsync, ILoggy loggy, ISaveFile saveFile)
         {
             _getAllFiles = getAllFiles;
             _getUser = getUser;
             _addFile = addFileAsync;
             _deleteFile = deleteFileAsync;
             _loggy = loggy;
+            _saveFile = saveFile;
         }
+
         [HttpGet]
         public IActionResult Index()
         {
@@ -31,12 +35,14 @@ namespace MyDiskApp.Controllers
             }
             return View();
         }
+
         [HttpGet]
         [Authorize]
         public IActionResult AddFile()
         {
             return View();
         }
+
         [HttpPost]
         [Authorize]
         [RequestSizeLimit(737280000)]
@@ -52,12 +58,14 @@ namespace MyDiskApp.Controllers
 
             return View(fileModel);
         }
+
         [HttpGet]
         [Authorize]
         public IActionResult DeleteFile()
         {
             return View();
         }
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> DeleteFile(DeleteFileModel deleteFile)
@@ -70,6 +78,33 @@ namespace MyDiskApp.Controllers
                 return RedirectToAction("Index");
             }
             return View(deleteFile);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult SaveFile()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> SaveFile(SaveFileModel saveFile)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = _getUser.GetUser(User.Identity.Name);
+                UserFile userFile = _saveFile.Save(user, saveFile.Name);
+
+                if (userFile != null)
+                {
+                    FileStream fs = new FileStream(userFile.Path, FileMode.Open);
+                    await _loggy.AddLogAsync(user.Login, "SaveFile", DateTime.Now);
+                    return File(fs, userFile.ContentType, userFile.Name);
+                }
+            }
+            
+            return View(saveFile);
         }
     }
 }

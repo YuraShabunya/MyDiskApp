@@ -17,24 +17,28 @@ namespace MyDiskApp.Services
 
         public async Task AddFileAsync(User user, IFormFile uploadedFile)
         {
-            var newFile = new UserFile()
+            if (!_context.Files.Any(x => x.Name == uploadedFile.FileName))
             {
-                Name = uploadedFile.FileName,
-                UserId = user.Id,
-                Path = $"\\Files\\{user.CurrentDirectory}\\{uploadedFile.FileName}"
-            };
+                var newFile = new UserFile()
+                {
+                    Name = uploadedFile.FileName,
+                    UserId = user.Id,
+                    Path = $"\\Files\\{user.CurrentDirectory}\\{uploadedFile.FileName}",
+                    ContentType = uploadedFile.ContentType
+                };
 
-            if (!Directory.Exists(_appEnvironment.WebRootPath + $"\\Files\\{user.CurrentDirectory}"))
-            {
-                Directory.CreateDirectory(_appEnvironment.WebRootPath + $"\\Files\\{user.CurrentDirectory}");
-            }     
+                if (!Directory.Exists(_appEnvironment.WebRootPath + $"\\Files\\{user.CurrentDirectory}"))
+                {
+                    Directory.CreateDirectory(_appEnvironment.WebRootPath + $"\\Files\\{user.CurrentDirectory}");
+                }
 
-            _context.Files.Add(newFile);
-            await _context.SaveChangesAsync();
+                _context.Files.Add(newFile);
+                await _context.SaveChangesAsync();
 
-            using (var fileStream = new FileStream(_appEnvironment.WebRootPath + newFile.Path, FileMode.Create))
-            {
-                uploadedFile.CopyTo(fileStream);
+                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + newFile.Path, FileMode.Create))
+                {
+                    uploadedFile.CopyTo(fileStream);
+                }
             }
         }
     }

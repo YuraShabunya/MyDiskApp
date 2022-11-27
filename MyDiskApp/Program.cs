@@ -24,6 +24,7 @@ builder.Services.AddScoped<IUserIsExist, UserIsExistService>();
 builder.Services.AddScoped<IAddFile, AddFileService>();
 builder.Services.AddScoped<IGetAllFiles, GetAllFilesServices>();
 builder.Services.AddScoped<IDeleteFile, DeleteFileService>();
+builder.Services.AddScoped<ISaveFile, SaveFileService>();
 builder.Services.AddScoped<ILoggy, LoggyService>();
 builder.Services.AddScoped<IRecoverPassword, RecoverPasswordService>();
 builder.Services.AddTransient<IHashPassword, HashPasswordService>();
